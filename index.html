@@ -1,0 +1,1307 @@
+<title>Spareparts Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F1F2F4;
+    --surface:#FFFFFF;
+    --surface-2:#E7E9ED;
+    --surface-3:#DBDFE6;
+    --line:#D3D7E0;
+    --line-soft:#E3E6EC;
+    --ink:#14171D;
+    --ink-dim:#4B5568;
+    --ink-faint:#7C8598;
+    --sidebar-bg:#1B1F27;
+    --sidebar-bg-2:#12151B;
+    --sidebar-line:rgba(255,255,255,.08);
+    --sidebar-text:rgba(255,255,255,.68);
+    --sidebar-text-strong:#FFFFFF;
+    --ember:#D9631E;
+    --ember-soft:#FBE4D2;
+    --moss:#1F8A57;
+    --moss-soft:#DCF3E6;
+    --rust:#C1372F;
+    --rust-soft:#FBE0DE;
+    --steel:#3568B0;
+    --steel-soft:#E1EAF8;
+    --shadow:0 10px 30px rgba(20,23,29,.10);
+    --shadow-sm:0 2px 8px rgba(20,23,29,.06);
+    --radius:9px;
+    --radius-sm:6px;
+    --font-display:'Oswald','Arial Narrow',sans-serif;
+    --font-sans:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#15171C;
+      --surface:#1C1F26;
+      --surface-2:#242832;
+      --surface-3:#2E323D;
+      --line:#343945;
+      --line-soft:#2A2E38;
+      --ink:#EDEEF2;
+      --ink-dim:#AEB5C4;
+      --ink-faint:#78808F;
+      --sidebar-bg:#101216;
+      --sidebar-bg-2:#0A0C0F;
+      --sidebar-line:rgba(255,255,255,.07);
+      --ember:#E27B3F;
+      --ember-soft:rgba(217,99,30,.20);
+      --moss:#3FBE82;
+      --moss-soft:rgba(31,138,87,.20);
+      --rust:#E4685F;
+      --rust-soft:rgba(193,55,47,.20);
+      --steel:#6C9EE8;
+      --steel-soft:rgba(53,104,176,.22);
+      --shadow:0 10px 30px rgba(0,0,0,.4);
+      --shadow-sm:0 2px 8px rgba(0,0,0,.3);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#15171C;
+    --surface:#1C1F26;
+    --surface-2:#242832;
+    --surface-3:#2E323D;
+    --line:#343945;
+    --line-soft:#2A2E38;
+    --ink:#EDEEF2;
+    --ink-dim:#AEB5C4;
+    --ink-faint:#78808F;
+    --sidebar-bg:#101216;
+    --sidebar-bg-2:#0A0C0F;
+    --sidebar-line:rgba(255,255,255,.07);
+    --ember:#E27B3F;
+    --ember-soft:rgba(217,99,30,.20);
+    --moss:#3FBE82;
+    --moss-soft:rgba(31,138,87,.20);
+    --rust:#E4685F;
+    --rust-soft:rgba(193,55,47,.20);
+    --steel:#6C9EE8;
+    --steel-soft:rgba(53,104,176,.22);
+    --shadow:0 10px 30px rgba(0,0,0,.4);
+    --shadow-sm:0 2px 8px rgba(0,0,0,.3);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);color:var(--ink);font-family:var(--font-sans);
+    -webkit-font-smoothing:antialiased;min-height:100vh;
+  }
+  h1,h2,h3{font-family:var(--font-display);text-transform:uppercase;letter-spacing:.02em;margin:0;text-wrap:balance;}
+  .mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums;}
+
+  ::-webkit-scrollbar{width:10px;height:10px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:var(--line);border-radius:6px;}
+  ::-webkit-scrollbar-thumb:hover{background:var(--ink-faint);}
+
+  .app{display:flex;min-height:100vh;}
+
+  /* ---------- Sidebar ---------- */
+  .sidebar{
+    width:222px;flex-shrink:0;background:linear-gradient(180deg,var(--sidebar-bg) 0%,var(--sidebar-bg-2) 100%);
+    display:flex;flex-direction:column;padding:20px 0;position:sticky;top:0;height:100vh;
+  }
+  .brand{padding:0 20px 18px 20px;border-bottom:1px solid var(--sidebar-line);margin-bottom:12px;}
+  .brand-mark{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+  .brand-dot{
+    width:34px;height:34px;flex-shrink:0;border-radius:8px;background:var(--ember);
+    display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1px rgba(255,255,255,.12),0 4px 12px rgba(217,99,30,.35);
+  }
+  .brand-dot svg{width:19px;height:19px;color:#1B0F06;}
+  .brand-title{font-family:var(--font-display);font-size:15px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--sidebar-text-strong);line-height:1.18;}
+  .brand-sub{font-family:var(--font-mono);font-size:9.5px;color:var(--sidebar-text);letter-spacing:.12em;text-transform:uppercase;padding-left:2px;}
+
+  .nav{display:flex;flex-direction:column;gap:3px;padding:10px 12px;}
+  .nav-item{
+    display:flex;align-items:center;gap:10px;padding:10px 11px;border-radius:var(--radius-sm);
+    color:var(--sidebar-text);font-size:13px;font-weight:500;cursor:pointer;border:1px solid transparent;
+    user-select:none;transition:background .12s,color .12s;
+  }
+  .nav-item:hover{background:rgba(255,255,255,.06);color:var(--sidebar-text-strong);}
+  .nav-item.active{background:var(--ember-soft);color:var(--ember);}
+  .nav-icon{width:20px;height:20px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;}
+  .nav-icon svg{width:100%;height:100%;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+  .nav-label{flex:1;min-width:0;}
+  .nav-sub{display:block;font-size:10px;color:var(--sidebar-text);font-weight:400;margin-top:1px;opacity:.75;}
+
+  .sidebar-foot{margin-top:auto;padding:14px 20px 0 20px;}
+  .sync-pill{
+    display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:10px;color:var(--sidebar-text);
+    letter-spacing:.05em;text-transform:uppercase;padding:10px 12px;border-radius:var(--radius-sm);background:rgba(255,255,255,.04);
+    border:1px solid var(--sidebar-line);
+  }
+  .sync-dot{width:7px;height:7px;border-radius:50%;background:var(--moss);flex-shrink:0;box-shadow:0 0 6px rgba(63,190,130,.7);}
+  .sync-dot.saving{background:var(--ember);animation:pulse 1s ease-in-out infinite;}
+  .sync-dot.off{background:var(--ink-faint);box-shadow:none;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+
+  /* ---------- Main ---------- */
+  .main{flex:1;min-width:0;display:flex;flex-direction:column;}
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    padding:20px 30px;border-bottom:1px solid var(--line);background:var(--surface);position:sticky;top:0;z-index:20;
+  }
+  .topbar-titles h1{font-size:20px;color:var(--ink);}
+  .topbar-titles p{margin:5px 0 0 0;font-size:12.5px;color:var(--ink-faint);max-width:560px;}
+  .topbar-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
+
+  .content{padding:26px 30px 60px 30px;}
+
+  .search-box{
+    display:flex;align-items:center;gap:7px;background:var(--surface-2);border:1px solid var(--line);
+    border-radius:var(--radius-sm);padding:8px 12px;min-width:220px;
+  }
+  .search-box svg{width:14px;height:14px;color:var(--ink-faint);flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.8;}
+  .search-box input{background:none;border:none;outline:none;color:var(--ink);font-size:12.5px;width:100%;font-family:var(--font-sans);}
+  .search-box input::placeholder{color:var(--ink-faint);}
+
+  select.ctrl, .chip-toggle{
+    font-family:var(--font-sans);font-size:12.5px;color:var(--ink);background:var(--surface-2);
+    border:1px solid var(--line);border-radius:var(--radius-sm);padding:8px 12px;cursor:pointer;
+  }
+  .chip-toggle{display:flex;align-items:center;gap:7px;user-select:none;font-weight:500;}
+  .chip-toggle input{accent-color:var(--ember);width:14px;height:14px;}
+  .chip-toggle.active{background:var(--ember-soft);border-color:var(--ember-soft);color:var(--ember);}
+
+  .btn{
+    display:inline-flex;align-items:center;gap:7px;font-family:var(--font-sans);font-size:12.5px;font-weight:600;
+    padding:9px 15px;border-radius:var(--radius-sm);border:1px solid transparent;cursor:pointer;letter-spacing:.01em;
+    transition:filter .12s,transform .05s;
+  }
+  .btn:active{transform:translateY(1px);}
+  .btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .btn-primary{background:var(--ember);color:#1B0F06;}
+  .btn-primary:hover{filter:brightness(1.06);}
+  .btn-ghost{background:var(--surface-2);color:var(--ink-dim);border-color:var(--line);}
+  .btn-ghost:hover{background:var(--surface-3);color:var(--ink);}
+  .btn-danger{background:var(--rust-soft);color:var(--rust);}
+  .btn-danger:hover{filter:brightness(0.97);}
+  .btn:disabled{opacity:.5;cursor:not-allowed;}
+
+  /* ---------- KPI grid ---------- */
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px;}
+  @media (max-width:1050px){.kpi-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:560px){.kpi-grid{grid-template-columns:1fr;}}
+  .kpi{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;
+    box-shadow:var(--shadow-sm);position:relative;overflow:hidden;
+  }
+  .kpi-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .kpi-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .kpi-icon svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+  .kpi-flag{font-family:var(--font-mono);font-size:9.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:3px 7px;border-radius:5px;}
+  .kpi-label{font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px;}
+  .kpi-value{font-family:var(--font-mono);font-size:27px;font-weight:600;letter-spacing:-.01em;color:var(--ink);line-height:1.1;}
+  .kpi-foot{margin-top:8px;font-size:11.5px;color:var(--ink-faint);}
+  .kpi.clickable{cursor:pointer;transition:border-color .12s,box-shadow .12s;}
+  .kpi.clickable:hover{border-color:var(--ember);box-shadow:var(--shadow);}
+
+  /* ---------- Chart panel ---------- */
+  .chart-panel{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px 16px 22px;
+    box-shadow:var(--shadow-sm);
+  }
+  .chart-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:10px;}
+  .chart-head h3{font-size:13.5px;color:var(--ink);letter-spacing:.03em;}
+  .chart-head p{margin:3px 0 0 0;font-size:11.5px;color:var(--ink-faint);text-transform:none;font-family:var(--font-sans);letter-spacing:0;}
+  .segmented{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;}
+  .segmented button{
+    font-family:var(--font-sans);font-size:11.5px;font-weight:600;padding:6px 12px;border:none;background:var(--surface-2);
+    color:var(--ink-dim);cursor:pointer;
+  }
+  .segmented button.active{background:var(--ember);color:#1B0F06;}
+  .chart-wrap{position:relative;width:100%;height:260px;margin-top:8px;}
+  .chart-wrap canvas{width:100%;height:100%;display:block;}
+  .empty-state{padding:50px 20px;text-align:center;color:var(--ink-faint);}
+  .empty-state svg{width:38px;height:38px;stroke:var(--ink-faint);fill:none;stroke-width:1.5;margin-bottom:10px;}
+  .empty-state h3{font-size:14px;color:var(--ink-dim);margin-bottom:5px;}
+  .empty-state p{font-size:12.5px;margin:0;}
+
+  /* ---------- Table ---------- */
+  .toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .toolbar .spacer{flex:1;}
+  .result-count{font-family:var(--font-mono);font-size:11px;color:var(--ink-faint);letter-spacing:.04em;}
+
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;}
+  .table-scroll{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;min-width:1080px;}
+  thead th{
+    text-align:left;font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+    color:var(--ink-faint);padding:12px 16px;border-bottom:1px solid var(--line);background:var(--surface-2);white-space:nowrap;
+  }
+  tbody td{padding:12px 16px;font-size:12.5px;color:var(--ink);border-bottom:1px solid var(--line-soft);white-space:nowrap;}
+  tbody tr{cursor:pointer;transition:background .1s;}
+  tbody tr:hover{background:var(--surface-2);}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr.row-low td:first-child{box-shadow:inset 3px 0 0 var(--rust);}
+  .cell-strong{font-weight:600;}
+  .cell-num{font-family:var(--font-mono);text-align:right;}
+  thead th.num{text-align:right;}
+  .row-end{text-align:right;}
+  .row-chevron{color:var(--ink-faint);}
+  .row-chevron svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;}
+  .pill-steel{background:var(--steel-soft);color:var(--steel);}
+  .pill-rust{background:var(--rust-soft);color:var(--rust);}
+  .pill-moss{background:var(--moss-soft);color:var(--moss);}
+  .cell-truncate{max-width:220px;overflow:hidden;text-overflow:ellipsis;}
+
+  /* ---------- Modal ---------- */
+  .modal-backdrop{
+    position:fixed;inset:0;background:rgba(10,11,14,.55);display:none;align-items:flex-start;justify-content:center;
+    padding:44px 16px;z-index:100;overflow-y:auto;
+  }
+  .modal-backdrop.open{display:flex;}
+  .modal{
+    background:var(--surface);border-radius:var(--radius);border:1px solid var(--line);box-shadow:var(--shadow);
+    width:100%;max-width:620px;padding:26px 28px 22px 28px;
+  }
+  .modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+  .modal-head h2{font-size:17px;color:var(--ink);}
+  .modal-close{background:none;border:none;cursor:pointer;color:var(--ink-faint);padding:4px;border-radius:6px;}
+  .modal-close:hover{background:var(--surface-2);color:var(--ink);}
+  .modal-close svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;}
+  .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px;}
+  .field{display:flex;flex-direction:column;gap:5px;}
+  .field.full{grid-column:1/-1;}
+  .field label{font-family:var(--font-mono);font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);}
+  .field label .req{color:var(--rust);}
+  .field input{
+    font-family:var(--font-sans);font-size:13px;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);
+    border-radius:var(--radius-sm);padding:9px 11px;outline:none;transition:border-color .12s;width:100%;
+  }
+  .field input.mono-field{font-family:var(--font-mono);}
+  .field input:focus{border-color:var(--ember);}
+  .field select{
+    font-family:var(--font-sans);font-size:13px;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);
+    border-radius:var(--radius-sm);padding:9px 11px;outline:none;transition:border-color .12s;width:100%;cursor:pointer;
+  }
+  .field select:focus{border-color:var(--ember);}
+  .field input:disabled, .field select:disabled{background:var(--surface-3);color:var(--ink-faint);cursor:not-allowed;}
+  .field-hint{font-size:11px;color:var(--ink-faint);margin-top:1px;}
+  .modal-foot{display:flex;align-items:center;justify-content:space-between;margin-top:22px;padding-top:18px;border-top:1px solid var(--line);}
+  .modal-foot .right{display:flex;gap:10px;}
+
+  /* ---------- Toast ---------- */
+  .toast-stack{position:fixed;bottom:22px;right:22px;display:flex;flex-direction:column;gap:8px;z-index:200;}
+  .toast{
+    font-family:var(--font-sans);font-size:12.5px;font-weight:500;padding:11px 16px;border-radius:var(--radius-sm);
+    box-shadow:var(--shadow);display:flex;align-items:center;gap:8px;animation:toastIn .18s ease;background:var(--surface);
+    border:1px solid var(--line);color:var(--ink);max-width:320px;
+  }
+  .toast svg{width:15px;height:15px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:2;}
+  .toast.good{border-color:var(--moss-soft);color:var(--moss);}
+  .toast.bad{border-color:var(--rust-soft);color:var(--rust);}
+  @keyframes toastIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+  @media (max-width:760px){
+    .sidebar{width:72px;}
+    .brand-title,.brand-sub,.nav-sub,.nav-label{display:none;}
+    .nav-item{justify-content:center;}
+    .content{padding:20px 16px 50px 16px;}
+    .topbar{padding:16px 18px;}
+  }
+</style>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <span class="brand-dot"><svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 7.5l-9-5-9 5 9 5 9-5z"/><path d="M3 7.5v9l9 5 9-5v-9"/><path d="M12 12.5V21"/></svg></span>
+        <span class="brand-title">Spareparts<br>Console</span>
+      </div>
+      <div class="brand-sub">Inventory Control</div>
+    </div>
+    <nav class="nav" id="navList"></nav>
+    <div class="sidebar-foot">
+      <div class="sync-pill"><span class="sync-dot" id="syncDot"></span><span id="syncLabel">Connecting&hellip;</span></div>
+    </div>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-titles" id="topbarTitles"></div>
+      <div class="topbar-actions" id="topbarActions"></div>
+    </header>
+    <div class="content" id="content"></div>
+  </main>
+</div>
+
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal" id="modal"></div>
+</div>
+
+<div class="toast-stack" id="toastStack"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------------- Icons ---------------- */
+const ICONS = {
+  dashboard:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7.5" height="7.5" rx="1.6"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.6"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.6"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.6"/></svg>',
+  box:'<svg viewBox="0 0 24 24"><path d="M21 7.5l-9-5-9 5 9 5 9-5z"/><path d="M3 7.5v9l9 5 9-5v-9"/><path d="M12 12.5V21"/></svg>',
+  plus:'<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
+  search:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>',
+  sort:'<svg viewBox="0 0 24 24"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg>',
+  close:'<svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>',
+  check:'<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>',
+  warning:'<svg viewBox="0 0 24 24"><path d="M12 3l10 18H2z"/><path d="M12 9.5v4.2"/><circle cx="12" cy="17.2" r=".7" fill="currentColor" stroke="none"/></svg>',
+  tag:'<svg viewBox="0 0 24 24"><path d="M20.5 12.6L11.9 21 3 12.1V3h9.1z"/><circle cx="7.7" cy="7.7" r="1.3" fill="currentColor" stroke="none"/></svg>',
+  coins:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.3 9.6c0-1.4 1.3-2.3 2.7-2.3s2.7.9 2.7 2.1-1.3 1.9-2.7 2.1-2.7.7-2.7 2.1 1.3 2.1 2.7 2.1 2.7-.9 2.7-2.1"/></svg>',
+  layers:'<svg viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 12.5l9 5 9-5"/><path d="M3 17l9 5 9-5"/></svg>',
+  chevronRight:'<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>',
+  trash:'<svg viewBox="0 0 24 24"><path d="M3.5 6h17"/><path d="M8.5 6V4.2h7V6"/><path d="M18.5 6l-1 14h-11l-1-14"/><path d="M10.2 10.5v6M13.8 10.5v6"/></svg>',
+  empty:'<svg viewBox="0 0 24 24"><path d="M21 7.5l-9-5-9 5 9 5 9-5z"/><path d="M3 7.5v9l9 5 9-5v-9"/><path d="M3 7.5l9 5 9-5" opacity=".4"/></svg>',
+  transferOut:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12h7M12 8l4 4-4 4"/></svg>'
+};
+
+/* ---------------- Config ---------------- */
+const NAV = [
+  { id:'dashboard', label:'Dashboard', sub:'Stock overview', icon:'dashboard' },
+  { id:'records', label:'Spareparts Records', sub:'Search &amp; manage inventory', icon:'box' },
+  { id:'transfers', label:'Transfers', sub:'Depot transfer log', icon:'transferOut' },
+];
+
+const PART_FIELDS = [
+  { key:'partNo', label:'Part No.', type:'text', required:true, placeholder:'e.g. ENG-4471' },
+  { key:'partName', label:'Part Name', type:'text', required:true, placeholder:'e.g. Fuel Injector Nozzle' },
+  { key:'category', label:'Category', type:'combo', options:'categories', required:true, placeholder:'e.g. Engine' },
+  { key:'assetCompat', label:'Asset Compatibility', type:'text', required:false, placeholder:'e.g. 23-Series, Universal' },
+  { key:'quantity', label:'Quantity', type:'number', required:true, min:0, step:1 },
+  { key:'unit', label:'Unit', type:'combo', options:'units', required:true, placeholder:'e.g. pcs' },
+  { key:'minStock', label:'Min Stock Level', type:'number', required:true, min:0, step:1 },
+  { key:'unitPrice', label:'Unit Price (RM)', type:'number', required:true, min:0, step:0.01 },
+  { key:'supplier', label:'Supplier', type:'text', required:false, placeholder:'e.g. KTM Parts Sdn Bhd' },
+  { key:'storageLoc', label:'Storage Location', type:'text', required:false, placeholder:'e.g. Warehouse A, Rack 3' },
+  { key:'lastUpdated', label:'Last Updated', type:'date', required:false },
+];
+
+const CATEGORY_SEED = ['Engine','Electrical','Brake System','Suspension','Body & Structural','Consumables','Tools','Other'];
+const UNIT_SEED = ['pcs','set','box','liter','kg','meter','roll'];
+
+const STATUS_OPTIONS = ['Not Used','Used','Returned'];
+const DEPOT_SEED = ['Depot A','Depot B','Headquarters Store','Field Workshop'];
+const TRANSFER_FIELDS = [
+  { key:'partId', label:'Part', type:'partSelect', required:true, locked:true, full:true },
+  { key:'quantity', label:'Quantity', type:'number', required:true, min:1, step:1, locked:true },
+  { key:'fromDepot', label:'From Depot', type:'combo', options:'depots', required:true, placeholder:'e.g. Depot A' },
+  { key:'toDepot', label:'To Depot', type:'combo', options:'depots', required:true, placeholder:'e.g. Depot B' },
+  { key:'dateIssued', label:'Date Issued', type:'date', required:true },
+  { key:'status', label:'Status', type:'select', options:STATUS_OPTIONS, required:true },
+  { key:'dateUsed', label:'Date Used', type:'date', required:false },
+  { key:'usedOn', label:'Used On', type:'text', required:false, placeholder:'e.g. Locomotive 20-Series #4471' },
+  { key:'remarks', label:'Remarks', type:'text', required:false, full:true },
+];
+
+/* ---------------- State ---------------- */
+let DATA = { spareparts: [], transfers: [] };
+let dbApi = null;
+let dbStatus = 'connecting'; // connecting | online | saving | offline
+let currentView = 'dashboard';
+let searchTerm = '';
+let sortState = { key:null, dir:1 };
+let categoryFilter = 'all';
+let lowStockOnly = false;
+let chartMode = 'count'; // count | value
+let editingId = null;
+let unsubscribeFn = null;
+let dashResizeTimer = null;
+let transferSearchTerm = '';
+let transferStatusFilter = 'all';
+let transferDepotFilter = 'all';
+let transferSortState = { key:null, dir:1 };
+let editingTransferId = null;
+let unsubscribeTransfersFn = null;
+
+/* ---------------- Helpers ---------------- */
+function esc(v){
+  return String(v==null?'':v).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function num(v){ const n = Number(v); return isFinite(n) ? n : 0; }
+function fmtMoney(v){ return 'RM ' + num(v).toLocaleString('en-MY',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function fmtInt(v){ return num(v).toLocaleString('en-MY'); }
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function fmtDate(v){
+  if(!v) return '&mdash;';
+  const d = new Date(v+'T00:00:00');
+  if(isNaN(d)) return esc(v);
+  return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+}
+function distinctValues(key, seed){
+  const set = new Set(seed);
+  DATA.spareparts.forEach(p=>{ if(p[key]) set.add(p[key]); });
+  return Array.from(set);
+}
+function matchesSearch(p, term){
+  if(!term) return true;
+  const t = term.toLowerCase();
+  return ['partNo','partName','category','supplier','storageLoc','assetCompat'].some(k=>String(p[k]||'').toLowerCase().includes(t));
+}
+function cmpValues(a,b){
+  if(a==null && b==null) return 0;
+  if(a==null) return -1;
+  if(b==null) return 1;
+  const na = Number(a), nb = Number(b);
+  if(!isNaN(na) && !isNaN(nb) && a!=='' && b!=='') return na-nb;
+  return String(a).localeCompare(String(b));
+}
+function sortRows(rows){
+  if(!sortState.key) return rows;
+  const k = sortState.key, dir = sortState.dir;
+  return rows.slice().sort((a,b)=>cmpValues(a[k],b[k])*dir);
+}
+function sortByState(rows, state){
+  if(!state.key) return rows;
+  return rows.slice().sort((a,b)=>cmpValues(a[state.key],b[state.key])*state.dir);
+}
+function isLow(p){ return num(p.quantity) <= num(p.minStock); }
+function distinctDepotValues(seed){
+  const set = new Set(seed);
+  DATA.transfers.forEach(t=>{ if(t.fromDepot) set.add(t.fromDepot); if(t.toDepot) set.add(t.toDepot); });
+  return Array.from(set);
+}
+function matchesTransferSearch(t, term){
+  if(!term) return true;
+  const q = term.toLowerCase();
+  return ['partNo','partName','fromDepot','toDepot','usedOn','remarks'].some(k=>String(t[k]||'').toLowerCase().includes(q));
+}
+
+function toast(msg, kind){
+  const stack = document.getElementById('toastStack');
+  const el = document.createElement('div');
+  el.className = 'toast' + (kind ? ' '+kind : '');
+  el.innerHTML = (kind==='good'?ICONS.check:kind==='bad'?ICONS.warning:'') + '<span>'+esc(msg)+'</span>';
+  stack.appendChild(el);
+  setTimeout(()=>{ el.style.opacity='0'; el.style.transition='opacity .2s'; setTimeout(()=>el.remove(),200); }, 3200);
+}
+
+/* ---------------- Persistence (db capability) ---------------- */
+async function initDb(){
+  try{
+    dbApi = (window.claude && typeof window.claude.use === 'function') ? await window.claude.use('db') : null;
+  }catch(e){ dbApi = null; }
+  if(!dbApi){
+    dbStatus = 'offline';
+    updateSyncPill();
+    renderContent();
+    return;
+  }
+  dbStatus = 'online';
+  subscribeRecords();
+  subscribeTransfers();
+}
+function subscribeRecords(){
+  try{
+    unsubscribeFn = dbApi.collection('spareparts').onSnapshot(
+      snap=>{
+        DATA.spareparts = snap.docs.map(d=>Object.assign({ id:d.id }, d.data()));
+        dbStatus = 'online';
+        updateSyncPill();
+        renderNav();
+        renderContent();
+      },
+      err=>{
+        console.error(err);
+        dbStatus = 'offline';
+        updateSyncPill();
+        toast('Sync lost: '+(err && err.message || 'unknown error'), 'bad');
+      }
+    );
+  }catch(e){
+    dbStatus = 'offline';
+    updateSyncPill();
+  }
+}
+function updateSyncPill(){
+  const dot = document.getElementById('syncDot');
+  const label = document.getElementById('syncLabel');
+  if(!dot || !label) return;
+  dot.classList.remove('saving','off');
+  if(dbStatus==='connecting'){ label.textContent = 'Connecting…'; }
+  else if(dbStatus==='saving'){ dot.classList.add('saving'); label.textContent = 'Saving…'; }
+  else if(dbStatus==='online'){ label.textContent = 'Synced'; }
+  else { dot.classList.add('off'); label.textContent = 'Local only'; }
+}
+async function createPart(body){
+  dbStatus='saving'; updateSyncPill();
+  try{
+    if(dbApi){
+      await dbApi.collection('spareparts').add(body);
+    } else {
+      body.id = 'local_' + Date.now();
+      DATA.spareparts.push(body);
+    }
+    toast('Sparepart added', 'good');
+    return true;
+  }catch(e){
+    toast('Could not save: ' + (e && e.message || 'unknown error'), 'bad');
+    return false;
+  }finally{
+    dbStatus = dbApi ? 'online' : 'offline'; updateSyncPill();
+    if(!dbApi){ renderNav(); renderContent(); }
+  }
+}
+async function updatePart(id, body){
+  dbStatus='saving'; updateSyncPill();
+  try{
+    if(dbApi){
+      await dbApi.doc('spareparts/'+id).update(body);
+    } else {
+      const rec = DATA.spareparts.find(p=>p.id===id);
+      if(rec) Object.assign(rec, body);
+    }
+    toast('Sparepart updated', 'good');
+    return true;
+  }catch(e){
+    toast('Could not save: ' + (e && e.message || 'unknown error'), 'bad');
+    return false;
+  }finally{
+    dbStatus = dbApi ? 'online' : 'offline'; updateSyncPill();
+    if(!dbApi){ renderNav(); renderContent(); }
+  }
+}
+async function deletePart(id){
+  dbStatus='saving'; updateSyncPill();
+  try{
+    if(dbApi){
+      await dbApi.doc('spareparts/'+id).delete();
+    } else {
+      DATA.spareparts = DATA.spareparts.filter(p=>p.id!==id);
+    }
+    toast('Sparepart deleted', 'good');
+    return true;
+  }catch(e){
+    toast('Could not delete: ' + (e && e.message || 'unknown error'), 'bad');
+    return false;
+  }finally{
+    dbStatus = dbApi ? 'online' : 'offline'; updateSyncPill();
+    if(!dbApi){ renderNav(); renderContent(); }
+  }
+}
+
+/* ---------------- Transfers persistence (deducts/restores spareparts stock) ---------------- */
+function subscribeTransfers(){
+  try{
+    unsubscribeTransfersFn = dbApi.collection('transfers').onSnapshot(
+      snap=>{
+        DATA.transfers = snap.docs.map(d=>Object.assign({ id:d.id }, d.data()));
+        renderNav();
+        renderContent();
+      },
+      err=>{
+        console.error(err);
+        toast('Transfers sync lost: '+(err && err.message || 'unknown error'), 'bad');
+      }
+    );
+  }catch(e){ /* offline mode already surfaced by initDb */ }
+}
+async function adjustPartQuantity(partId, delta){
+  const part = DATA.spareparts.find(p=>p.id===partId);
+  const next = Math.max(0, num(part ? part.quantity : 0) + delta);
+  if(dbApi) await dbApi.doc('spareparts/'+partId).update({ quantity: next });
+  else if(part) part.quantity = next;
+}
+async function createTransfer(body){
+  const part = DATA.spareparts.find(p=>p.id===body.partId);
+  if(!part){ toast('Selected part no longer exists', 'bad'); return false; }
+  if(!(body.quantity>0)){
+    toast('Quantity must be at least 1', 'bad');
+    return false;
+  }
+  if(body.quantity>num(part.quantity)){
+    toast('Quantity exceeds available stock (' + fmtInt(part.quantity) + ' available)', 'bad');
+    return false;
+  }
+  dbStatus='saving'; updateSyncPill();
+  const doc = Object.assign({ partNo:part.partNo, partName:part.partName, status:'Not Used', dateUsed:'' }, body);
+  try{
+    if(dbApi){
+      await dbApi.collection('transfers').add(doc);
+      await adjustPartQuantity(part.id, -body.quantity);
+    } else {
+      doc.id = 'local_' + Date.now();
+      DATA.transfers.push(doc);
+      part.quantity = num(part.quantity) - body.quantity;
+    }
+    toast('Transfer recorded, stock updated', 'good');
+    return true;
+  }catch(e){
+    toast('Could not record transfer: ' + (e && e.message || 'unknown error'), 'bad');
+    return false;
+  }finally{
+    dbStatus = dbApi ? 'online' : 'offline'; updateSyncPill();
+    if(!dbApi){ renderNav(); renderContent(); }
+  }
+}
+async function updateTransfer(id, body){
+  const existing = DATA.transfers.find(t=>t.id===id);
+  if(!existing) return false;
+  const oldStatus = existing.status, newStatus = body.status;
+  let delta = 0;
+  if(newStatus==='Returned' && oldStatus!=='Returned') delta = num(existing.quantity);
+  else if(oldStatus==='Returned' && newStatus!=='Returned') delta = -num(existing.quantity);
+  dbStatus='saving'; updateSyncPill();
+  try{
+    if(dbApi){
+      await dbApi.doc('transfers/'+id).update(body);
+      if(delta) await adjustPartQuantity(existing.partId, delta);
+    } else {
+      Object.assign(existing, body);
+      if(delta){
+        const p = DATA.spareparts.find(p=>p.id===existing.partId);
+        if(p) p.quantity = num(p.quantity) + delta;
+      }
+    }
+    toast('Transfer updated', 'good');
+    return true;
+  }catch(e){
+    toast('Could not save: ' + (e && e.message || 'unknown error'), 'bad');
+    return false;
+  }finally{
+    dbStatus = dbApi ? 'online' : 'offline'; updateSyncPill();
+    if(!dbApi){ renderNav(); renderContent(); }
+  }
+}
+async function deleteTransfer(id){
+  const existing = DATA.transfers.find(t=>t.id===id);
+  if(!existing) return false;
+  const restoreQty = existing.status!=='Returned' ? num(existing.quantity) : 0;
+  dbStatus='saving'; updateSyncPill();
+  try{
+    if(dbApi){
+      if(restoreQty) await adjustPartQuantity(existing.partId, restoreQty);
+      await dbApi.doc('transfers/'+id).delete();
+    } else {
+      if(restoreQty){
+        const p = DATA.spareparts.find(p=>p.id===existing.partId);
+        if(p) p.quantity = num(p.quantity) + restoreQty;
+      }
+      DATA.transfers = DATA.transfers.filter(t=>t.id!==id);
+    }
+    toast('Transfer deleted, stock adjusted', 'good');
+    return true;
+  }catch(e){
+    toast('Could not delete: ' + (e && e.message || 'unknown error'), 'bad');
+    return false;
+  }finally{
+    dbStatus = dbApi ? 'online' : 'offline'; updateSyncPill();
+    if(!dbApi){ renderNav(); renderContent(); }
+  }
+}
+
+/* ---------------- Nav / layout ---------------- */
+function renderNav(){
+  const el = document.getElementById('navList');
+  el.innerHTML = NAV.map(n=>`
+    <div class="nav-item ${n.id===currentView?'active':''}" data-view="${n.id}">
+      <span class="nav-icon">${ICONS[n.icon]}</span>
+      <span class="nav-label">${n.label}<span class="nav-sub">${n.sub}</span></span>
+    </div>
+  `).join('');
+  el.querySelectorAll('.nav-item').forEach(it=>{
+    it.addEventListener('click', ()=> setView(it.dataset.view));
+  });
+}
+function setView(id){
+  currentView = id;
+  if(id==='records'){} // no-op, filters persist across visits
+  renderNav();
+  renderTopbar();
+  renderContent();
+}
+function renderTopbar(){
+  const nav = NAV.find(n=>n.id===currentView);
+  const subtitleMap = {
+    dashboard: 'Stock levels, value, and category mix across the spareparts inventory.',
+    records: 'Every sparepart on record &mdash; search, sort, filter, and click a row to edit.',
+    transfers: 'Parts issued to other depots &mdash; trace where they went and whether they&rsquo;ve been used.',
+  };
+  document.getElementById('topbarTitles').innerHTML = `
+    <h1>${nav.label}</h1>
+    <p>${subtitleMap[currentView] || ''}</p>
+  `;
+  const actions = document.getElementById('topbarActions');
+  if(currentView==='records'){
+    actions.innerHTML = `
+      <div class="search-box">${ICONS.search}<input id="searchInput" type="text" placeholder="Search part no., name, category, supplier&hellip;" value="${esc(searchTerm)}"></div>
+      <select class="ctrl" id="categorySelect"></select>
+      <label class="chip-toggle ${lowStockOnly?'active':''}" id="lowStockToggle">
+        <input type="checkbox" id="lowStockCheck" ${lowStockOnly?'checked':''}> Low stock only
+      </label>
+      <button class="btn btn-primary" id="addPartBtn">${ICONS.plus}Add Part</button>
+    `;
+    const catSel = document.getElementById('categorySelect');
+    const cats = distinctValues('category', CATEGORY_SEED).sort();
+    catSel.innerHTML = '<option value="all">All categories</option>' + cats.map(c=>`<option value="${esc(c)}" ${categoryFilter===c?'selected':''}>${esc(c)}</option>`).join('');
+    document.getElementById('searchInput').addEventListener('input', e=>{ searchTerm = e.target.value; renderContent(); });
+    catSel.addEventListener('change', e=>{ categoryFilter = e.target.value; renderContent(); });
+    document.getElementById('lowStockCheck').addEventListener('change', e=>{
+      lowStockOnly = e.target.checked;
+      document.getElementById('lowStockToggle').classList.toggle('active', lowStockOnly);
+      renderContent();
+    });
+    document.getElementById('addPartBtn').addEventListener('click', ()=> openPartModal(null));
+  } else if(currentView==='transfers'){
+    const noParts = !DATA.spareparts.length;
+    actions.innerHTML = `
+      <div class="search-box">${ICONS.search}<input id="transferSearchInput" type="text" placeholder="Search part, depot, used on&hellip;" value="${esc(transferSearchTerm)}"></div>
+      <select class="ctrl" id="statusSelect"></select>
+      <select class="ctrl" id="depotSelect"></select>
+      <button class="btn btn-primary" id="logTransferBtn" ${noParts?'disabled title="Add a sparepart first"':''}>${ICONS.plus}Log Transfer</button>
+    `;
+    const statusSel = document.getElementById('statusSelect');
+    statusSel.innerHTML = '<option value="all">All statuses</option>' + STATUS_OPTIONS.map(s=>`<option value="${esc(s)}" ${transferStatusFilter===s?'selected':''}>${esc(s)}</option>`).join('');
+    const depotSel = document.getElementById('depotSelect');
+    const depots = distinctDepotValues(DEPOT_SEED).sort();
+    depotSel.innerHTML = '<option value="all">All depots</option>' + depots.map(d=>`<option value="${esc(d)}" ${transferDepotFilter===d?'selected':''}>${esc(d)}</option>`).join('');
+    document.getElementById('transferSearchInput').addEventListener('input', e=>{ transferSearchTerm = e.target.value; renderContent(); });
+    statusSel.addEventListener('change', e=>{ transferStatusFilter = e.target.value; renderContent(); });
+    depotSel.addEventListener('change', e=>{ transferDepotFilter = e.target.value; renderContent(); });
+    document.getElementById('logTransferBtn').addEventListener('click', ()=> openTransferModal(null));
+  } else {
+    actions.innerHTML = '';
+  }
+}
+function renderContent(){
+  const el = document.getElementById('content');
+  if(currentView==='dashboard') renderDashboard(el);
+  else if(currentView==='transfers') renderTransfers(el);
+  else renderRecords(el);
+}
+
+/* ---------------- Dashboard ---------------- */
+function computeKpis(){
+  const parts = DATA.spareparts;
+  const totalParts = parts.length;
+  const totalQty = parts.reduce((s,p)=>s+num(p.quantity),0);
+  const totalValue = parts.reduce((s,p)=>s+num(p.quantity)*num(p.unitPrice),0);
+  const lowStock = parts.filter(isLow).length;
+  const categories = new Set(parts.map(p=>p.category).filter(Boolean));
+  return { totalParts, totalQty, totalValue, lowStock, categoryCount:categories.size };
+}
+function categoryBreakdown(mode){
+  const map = {};
+  DATA.spareparts.forEach(p=>{
+    const cat = p.category || 'Uncategorized';
+    const v = mode==='value' ? num(p.quantity)*num(p.unitPrice) : 1;
+    map[cat] = (map[cat]||0) + v;
+  });
+  return Object.entries(map).map(([label,value])=>({label,value})).sort((a,b)=>b.value-a.value);
+}
+function renderDashboard(el){
+  const k = computeKpis();
+  el.innerHTML = `
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="kpi-top"><span class="kpi-icon" style="background:var(--steel-soft);color:var(--steel);">${ICONS.box}</span></div>
+        <div class="kpi-label">Total Parts</div>
+        <div class="kpi-value">${fmtInt(k.totalParts)}</div>
+        <div class="kpi-foot">${fmtInt(k.totalQty)} units in stock</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-top"><span class="kpi-icon" style="background:var(--moss-soft);color:var(--moss);">${ICONS.coins}</span></div>
+        <div class="kpi-label">Total Stock Value</div>
+        <div class="kpi-value">${fmtMoney(k.totalValue)}</div>
+        <div class="kpi-foot">Quantity &times; unit price, summed</div>
+      </div>
+      <div class="kpi clickable" id="kpiLowStock">
+        <div class="kpi-top">
+          <span class="kpi-icon" style="background:${k.lowStock>0?'var(--rust-soft)':'var(--moss-soft)'};color:${k.lowStock>0?'var(--rust)':'var(--moss)'};">${ICONS.warning}</span>
+          ${k.lowStock>0?'<span class="kpi-flag" style="background:var(--rust-soft);color:var(--rust);">Needs attention</span>':''}
+        </div>
+        <div class="kpi-label">Low Stock Items</div>
+        <div class="kpi-value">${fmtInt(k.lowStock)}</div>
+        <div class="kpi-foot">At or below minimum stock level</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-top"><span class="kpi-icon" style="background:var(--ember-soft);color:var(--ember);">${ICONS.layers}</span></div>
+        <div class="kpi-label">Categories</div>
+        <div class="kpi-value">${fmtInt(k.categoryCount)}</div>
+        <div class="kpi-foot">Distinct part categories on record</div>
+      </div>
+    </div>
+
+    <div class="chart-panel">
+      <div class="chart-head">
+        <div>
+          <h3>Category Breakdown</h3>
+          <p>${chartMode==='value' ? 'Stock value by category' : 'Part count by category'}</p>
+        </div>
+        <div class="segmented">
+          <button data-mode="count" class="${chartMode==='count'?'active':''}">By Count</button>
+          <button data-mode="value" class="${chartMode==='value'?'active':''}">By Value</button>
+        </div>
+      </div>
+      <div class="chart-wrap" id="chartWrap">
+        <canvas id="categoryChart"></canvas>
+      </div>
+    </div>
+  `;
+  const lowKpi = document.getElementById('kpiLowStock');
+  if(lowKpi) lowKpi.addEventListener('click', ()=>{ lowStockOnly = true; setView('records'); });
+  el.querySelectorAll('.segmented button').forEach(b=>{
+    b.addEventListener('click', ()=>{ chartMode = b.dataset.mode; renderDashboard(el); });
+  });
+  drawCategoryChart();
+}
+function drawCategoryChart(){
+  const canvas = document.getElementById('categoryChart');
+  if(!canvas) return;
+  const wrap = document.getElementById('chartWrap');
+  const data = categoryBreakdown(chartMode);
+  const styles = getComputedStyle(document.documentElement);
+  const inkFaint = styles.getPropertyValue('--ink-faint').trim();
+  const line = styles.getPropertyValue('--line-soft').trim();
+  const ember = styles.getPropertyValue('--ember').trim();
+  const ink = styles.getPropertyValue('--ink').trim();
+
+  const dpr = window.devicePixelRatio || 1;
+  const w = wrap.clientWidth, h = wrap.clientHeight;
+  canvas.width = w*dpr; canvas.height = h*dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,w,h);
+
+  if(!data.length){
+    ctx.fillStyle = inkFaint;
+    ctx.font = '13px IBM Plex Sans, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('No spareparts recorded yet', w/2, h/2);
+    return;
+  }
+
+  const padL = 100, padR = 70, padT = 10, padB = 30;
+  const plotW = Math.max(10, w - padL - padR);
+  const plotH = Math.max(10, h - padT - padB);
+  const maxVal = Math.max(...data.map(d=>d.value)) * 1.15 || 1;
+  const barGap = 10;
+  const barH = Math.min(30, (plotH - barGap*(data.length-1)) / data.length);
+  const totalBarsH = barH*data.length + barGap*(data.length-1);
+  const startY = padT + Math.max(0,(plotH-totalBarsH)/2);
+
+  ctx.strokeStyle = line; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, padT+Math.max(plotH,totalBarsH)); ctx.stroke();
+
+  ctx.font = '11px IBM Plex Mono, monospace';
+  data.forEach((d,i)=>{
+    const y = startY + i*(barH+barGap);
+    const bw = (d.value/maxVal) * plotW;
+
+    ctx.fillStyle = inkFaint;
+    ctx.textAlign = 'right';
+    ctx.font = '11.5px IBM Plex Sans, sans-serif';
+    ctx.fillText(d.label.length>16 ? d.label.slice(0,15)+'…' : d.label, padL-10, y+barH/2+4);
+
+    ctx.fillStyle = ember;
+    const r = 4;
+    ctx.beginPath();
+    ctx.moveTo(padL, y);
+    ctx.lineTo(padL+Math.max(bw-r,0), y);
+    ctx.arcTo(padL+bw, y, padL+bw, y+r, r);
+    ctx.lineTo(padL+bw, y+barH-r);
+    ctx.arcTo(padL+bw, y+barH, padL+Math.max(bw-r,0), y+barH, r);
+    ctx.lineTo(padL, y+barH);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.fillStyle = ink;
+    ctx.font = '11.5px IBM Plex Mono, monospace';
+    ctx.textAlign = 'left';
+    const label = chartMode==='value' ? fmtMoney(d.value) : fmtInt(d.value);
+    ctx.fillText(label, padL+bw+10, y+barH/2+4);
+  });
+}
+window.addEventListener('resize', ()=>{
+  clearTimeout(dashResizeTimer);
+  dashResizeTimer = setTimeout(()=>{ if(currentView==='dashboard') drawCategoryChart(); }, 120);
+});
+if(window.matchMedia){
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ()=>{
+    if(currentView==='dashboard') setTimeout(drawCategoryChart, 30);
+  });
+}
+
+/* ---------------- Records table ---------------- */
+const TABLE_COLUMNS = ['partNo','partName','category','assetCompat','quantity','unit','minStock','unitPrice','supplier','storageLoc','lastUpdated'];
+function fieldByKey(key){ return PART_FIELDS.find(f=>f.key===key); }
+
+function filteredRows(){
+  let rows = DATA.spareparts.filter(p=>matchesSearch(p, searchTerm));
+  if(categoryFilter!=='all') rows = rows.filter(p=>p.category===categoryFilter);
+  if(lowStockOnly) rows = rows.filter(isLow);
+  return sortRows(rows);
+}
+function renderRecords(el){
+  if(!DATA.spareparts.length){
+    el.innerHTML = `
+      <div class="panel">
+        <div class="empty-state">
+          ${ICONS.empty}
+          <h3>No spareparts recorded yet</h3>
+          <p>Click &ldquo;Add Part&rdquo; above to log your first inventory item.</p>
+        </div>
+      </div>
+    `;
+    return;
+  }
+  const rows = filteredRows();
+  el.innerHTML = `
+    <div class="toolbar">
+      <span class="result-count">${fmtInt(rows.length)} of ${fmtInt(DATA.spareparts.length)} parts</span>
+      <span class="spacer"></span>
+    </div>
+    <div class="panel">
+      <div class="table-scroll">
+        <table>
+          <thead><tr>${TABLE_COLUMNS.map(k=>{
+            const f = fieldByKey(k);
+            const isNum = f.type==='number';
+            return `<th class="${isNum?'num':''} sortable" data-key="${k}">${f.label}${sortState.key===k ? (sortState.dir===1?' ↑':' ↓') : ''}</th>`;
+          }).join('')}<th></th></tr></thead>
+          <tbody>
+            ${rows.length ? rows.map(p=>renderRow(p)).join('') : `<tr><td colspan="${TABLE_COLUMNS.length+1}" style="text-align:center;color:var(--ink-faint);padding:34px;">No parts match the current filters.</td></tr>`}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+  el.querySelectorAll('thead th.sortable').forEach(th=>{
+    th.style.cursor = 'pointer';
+    th.addEventListener('click', ()=>{
+      const key = th.dataset.key;
+      if(sortState.key===key) sortState.dir *= -1;
+      else sortState = { key, dir:1 };
+      renderRecords(el);
+    });
+  });
+  el.querySelectorAll('tbody tr[data-id]').forEach(tr=>{
+    tr.addEventListener('click', ()=> openPartModal(tr.dataset.id));
+  });
+}
+function renderRow(p){
+  const low = isLow(p);
+  return `<tr data-id="${p.id}" class="${low?'row-low':''}">
+    <td class="cell-strong mono">${esc(p.partNo)}</td>
+    <td>${esc(p.partName)}</td>
+    <td><span class="pill pill-steel">${esc(p.category||'—')}</span></td>
+    <td>${esc(p.assetCompat||'—')}</td>
+    <td class="cell-num">${low?`<span class="pill pill-rust">${fmtInt(p.quantity)}</span>`:fmtInt(p.quantity)}</td>
+    <td>${esc(p.unit||'—')}</td>
+    <td class="cell-num">${fmtInt(p.minStock)}</td>
+    <td class="cell-num">${fmtMoney(p.unitPrice)}</td>
+    <td>${esc(p.supplier||'—')}</td>
+    <td>${esc(p.storageLoc||'—')}</td>
+    <td class="mono">${fmtDate(p.lastUpdated)}</td>
+    <td class="row-end row-chevron">${ICONS.chevronRight}</td>
+  </tr>`;
+}
+
+/* ---------------- Transfers table ---------------- */
+const TRANSFER_TABLE_COLUMNS = ['part','quantity','fromDepot','toDepot','dateIssued','status','dateUsed','usedOn','remarks'];
+const TRANSFER_COLUMN_LABELS = {
+  part:'Part', quantity:'Quantity', fromDepot:'From Depot', toDepot:'To Depot',
+  dateIssued:'Date Issued', status:'Status', dateUsed:'Date Used', usedOn:'Used On', remarks:'Remarks'
+};
+function filteredTransferRows(){
+  let rows = DATA.transfers.filter(t=>matchesTransferSearch(t, transferSearchTerm));
+  if(transferStatusFilter!=='all') rows = rows.filter(t=>t.status===transferStatusFilter);
+  if(transferDepotFilter!=='all') rows = rows.filter(t=>t.fromDepot===transferDepotFilter || t.toDepot===transferDepotFilter);
+  return sortByState(rows, transferSortState);
+}
+function statusPillClass(status){
+  if(status==='Used') return 'pill-moss';
+  if(status==='Returned') return 'pill-steel';
+  return 'pill-rust';
+}
+function renderTransfers(el){
+  if(!DATA.transfers.length){
+    el.innerHTML = `
+      <div class="panel">
+        <div class="empty-state">
+          ${ICONS.transferOut}
+          <h3>No transfers logged yet</h3>
+          <p>${DATA.spareparts.length ? 'Click &ldquo;Log Transfer&rdquo; above to record a part sent to another depot.' : 'Add a sparepart to Records first, then you can log a transfer.'}</p>
+        </div>
+      </div>
+    `;
+    return;
+  }
+  const rows = filteredTransferRows();
+  el.innerHTML = `
+    <div class="toolbar">
+      <span class="result-count">${fmtInt(rows.length)} of ${fmtInt(DATA.transfers.length)} transfers</span>
+      <span class="spacer"></span>
+    </div>
+    <div class="panel">
+      <div class="table-scroll">
+        <table>
+          <thead><tr>${TRANSFER_TABLE_COLUMNS.map(k=>{
+            const sortKey = k==='part' ? 'partNo' : k;
+            const isNum = k==='quantity';
+            return `<th class="${isNum?'num':''} sortable" data-key="${sortKey}">${TRANSFER_COLUMN_LABELS[k]}${transferSortState.key===sortKey ? (transferSortState.dir===1?' ↑':' ↓') : ''}</th>`;
+          }).join('')}<th></th></tr></thead>
+          <tbody>
+            ${rows.length ? rows.map(t=>renderTransferRow(t)).join('') : `<tr><td colspan="${TRANSFER_TABLE_COLUMNS.length+1}" style="text-align:center;color:var(--ink-faint);padding:34px;">No transfers match the current filters.</td></tr>`}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+  el.querySelectorAll('thead th.sortable').forEach(th=>{
+    th.style.cursor = 'pointer';
+    th.addEventListener('click', ()=>{
+      const key = th.dataset.key;
+      if(transferSortState.key===key) transferSortState.dir *= -1;
+      else transferSortState = { key, dir:1 };
+      renderTransfers(el);
+    });
+  });
+  el.querySelectorAll('tbody tr[data-id]').forEach(tr=>{
+    tr.addEventListener('click', ()=> openTransferModal(tr.dataset.id));
+  });
+}
+function renderTransferRow(t){
+  return `<tr data-id="${t.id}">
+    <td><span class="cell-strong mono">${esc(t.partNo)}</span><br><span style="color:var(--ink-faint);font-size:11.5px;">${esc(t.partName)}</span></td>
+    <td class="cell-num">${fmtInt(t.quantity)}</td>
+    <td>${esc(t.fromDepot||'—')}</td>
+    <td>${esc(t.toDepot||'—')}</td>
+    <td class="mono">${fmtDate(t.dateIssued)}</td>
+    <td><span class="pill ${statusPillClass(t.status)}">${esc(t.status)}</span></td>
+    <td class="mono">${fmtDate(t.dateUsed)}</td>
+    <td>${esc(t.usedOn||'—')}</td>
+    <td class="cell-truncate" title="${esc(t.remarks||'')}">${esc(t.remarks||'—')}</td>
+    <td class="row-end row-chevron">${ICONS.chevronRight}</td>
+  </tr>`;
+}
+
+/* ---------------- Modal (create / edit / delete) ---------------- */
+function openPartModal(id){
+  editingId = id;
+  const rec = id ? DATA.spareparts.find(p=>p.id===id) : null;
+  const modal = document.getElementById('modal');
+  modal.innerHTML = `
+    <div class="modal-head">
+      <h2>${rec ? 'Edit Sparepart' : 'New Sparepart'}</h2>
+      <button class="modal-close" id="modalCloseBtn">${ICONS.close}</button>
+    </div>
+    <div class="field-grid">
+      ${PART_FIELDS.map(f=>renderField(f, rec)).join('')}
+    </div>
+    <div class="modal-foot">
+      <div>${rec ? `<button class="btn btn-danger" id="deleteBtn">${ICONS.trash}Delete</button>` : ''}</div>
+      <div class="right">
+        <button class="btn btn-ghost" id="cancelBtn">Cancel</button>
+        <button class="btn btn-primary" id="saveBtn">${ICONS.check}${rec?'Save Changes':'Add Part'}</button>
+      </div>
+    </div>
+  `;
+  ['category','unit'].forEach(key=>{
+    const list = document.getElementById('dl_'+key);
+    if(list) list.innerHTML = distinctValues(key, key==='category'?CATEGORY_SEED:UNIT_SEED).map(v=>`<option value="${esc(v)}">`).join('');
+  });
+  document.getElementById('modalBackdrop').classList.add('open');
+  document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
+  document.getElementById('cancelBtn').addEventListener('click', closeModal);
+  document.getElementById('saveBtn').addEventListener('click', submitPartForm);
+  const delBtn = document.getElementById('deleteBtn');
+  if(delBtn) delBtn.addEventListener('click', async ()=>{
+    if(!confirm('Delete this sparepart record? This cannot be undone.')) return;
+    delBtn.disabled = true;
+    const ok = await deletePart(id);
+    if(ok) closeModal();
+  });
+}
+function renderField(f, rec){
+  const val = rec ? (rec[f.key] ?? '') : (f.key==='lastUpdated' ? todayStr() : '');
+  const req = f.required ? '<span class="req">*</span>' : '';
+  let input;
+  if(f.type==='combo'){
+    input = `<input list="dl_${f.key}" data-key="${f.key}" value="${esc(val)}" placeholder="${esc(f.placeholder||'')}" autocomplete="off">
+      <datalist id="dl_${f.key}"></datalist>`;
+  } else if(f.type==='number'){
+    input = `<input type="number" class="mono-field" data-key="${f.key}" value="${esc(val)}" min="${f.min ?? 0}" step="${f.step ?? 1}">`;
+  } else if(f.type==='date'){
+    input = `<input type="date" class="mono-field" data-key="${f.key}" value="${esc(val)}">`;
+  } else {
+    input = `<input type="text" data-key="${f.key}" value="${esc(val)}" placeholder="${esc(f.placeholder||'')}">`;
+  }
+  const fullWidth = (f.key==='partName' || f.key==='supplier' || f.key==='storageLoc');
+  return `<div class="field${fullWidth?' full':''}"><label>${f.label} ${req}</label>${input}</div>`;
+}
+function closeModal(){
+  document.getElementById('modalBackdrop').classList.remove('open');
+  editingId = null;
+  editingTransferId = null;
+}
+function readPartForm(){
+  const body = {};
+  let missing = [];
+  PART_FIELDS.forEach(f=>{
+    const input = document.querySelector(`[data-key="${f.key}"]`);
+    let v = input.value.trim();
+    if(f.type==='number') v = v==='' ? 0 : Number(v);
+    body[f.key] = v;
+    if(f.required && (v==='' || v==null)) missing.push(f.label);
+  });
+  if(!body.lastUpdated) body.lastUpdated = todayStr();
+  return { body, missing };
+}
+async function submitPartForm(){
+  const { body, missing } = readPartForm();
+  if(missing.length){
+    toast('Please fill in: ' + missing.join(', '), 'bad');
+    return;
+  }
+  const saveBtn = document.getElementById('saveBtn');
+  saveBtn.disabled = true;
+  const ok = editingId ? await updatePart(editingId, body) : await createPart(body);
+  saveBtn.disabled = false;
+  if(ok) closeModal();
+}
+document.getElementById('modalBackdrop').addEventListener('click', e=>{
+  if(e.target.id==='modalBackdrop') closeModal();
+});
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape' && document.getElementById('modalBackdrop').classList.contains('open')) closeModal();
+});
+
+/* ---------------- Transfer modal (create / edit / delete) ---------------- */
+function openTransferModal(id){
+  editingTransferId = id;
+  editingId = null;
+  const rec = id ? DATA.transfers.find(t=>t.id===id) : null;
+  const modal = document.getElementById('modal');
+  modal.innerHTML = `
+    <div class="modal-head">
+      <h2>${rec ? 'Edit Transfer' : 'Log Transfer'}</h2>
+      <button class="modal-close" id="modalCloseBtn">${ICONS.close}</button>
+    </div>
+    <div class="field-grid">
+      ${TRANSFER_FIELDS.map(f=>renderTransferField(f, rec)).join('')}
+    </div>
+    <div class="modal-foot">
+      <div>${rec ? `<button class="btn btn-danger" id="deleteBtn">${ICONS.trash}Delete</button>` : ''}</div>
+      <div class="right">
+        <button class="btn btn-ghost" id="cancelBtn">Cancel</button>
+        <button class="btn btn-primary" id="saveBtn">${ICONS.check}${rec?'Save Changes':'Log Transfer'}</button>
+      </div>
+    </div>
+  `;
+  ['fromDepot','toDepot'].forEach(key=>{
+    const list = document.getElementById('dl_'+key);
+    if(list) list.innerHTML = distinctDepotValues(DEPOT_SEED).map(v=>`<option value="${esc(v)}">`).join('');
+  });
+  if(!rec){
+    const partSelect = document.getElementById('transferPartSelect');
+    if(partSelect) partSelect.addEventListener('change', updatePartAvailHint);
+    updatePartAvailHint();
+  }
+  document.getElementById('modalBackdrop').classList.add('open');
+  document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
+  document.getElementById('cancelBtn').addEventListener('click', closeModal);
+  document.getElementById('saveBtn').addEventListener('click', submitTransferForm);
+  const delBtn = document.getElementById('deleteBtn');
+  if(delBtn) delBtn.addEventListener('click', async ()=>{
+    if(!confirm('Delete this transfer record? This cannot be undone.')) return;
+    delBtn.disabled = true;
+    const ok = await deleteTransfer(id);
+    if(ok) closeModal();
+  });
+}
+function updatePartAvailHint(){
+  const sel = document.getElementById('transferPartSelect');
+  const hint = document.getElementById('partAvailHint');
+  const qtyInput = document.querySelector('[data-key="quantity"]');
+  if(!sel || !hint) return;
+  const part = DATA.spareparts.find(p=>p.id===sel.value);
+  const avail = part ? num(part.quantity) : 0;
+  hint.textContent = part ? ('Available: ' + fmtInt(avail) + (part.unit ? ' '+part.unit : '')) : 'Select a part to see available stock';
+  if(qtyInput){
+    qtyInput.max = avail;
+    if(Number(qtyInput.value) > avail) qtyInput.value = avail;
+  }
+}
+function renderTransferField(f, rec){
+  const isEdit = !!rec;
+  const req = f.required ? '<span class="req">*</span>' : '';
+  let input;
+  if(f.type==='partSelect'){
+    if(isEdit){
+      input = `<input type="text" value="${esc(rec.partNo)} &mdash; ${esc(rec.partName)}" disabled>`;
+    } else {
+      const parts = DATA.spareparts.slice().sort((a,b)=>String(a.partNo).localeCompare(String(b.partNo)));
+      input = `<select data-key="partId" id="transferPartSelect">
+        <option value="">Select a part&hellip;</option>
+        ${parts.map(p=>`<option value="${p.id}" ${num(p.quantity)<=0?'disabled':''}>${esc(p.partNo)} &mdash; ${esc(p.partName)} (${fmtInt(p.quantity)} avail)</option>`).join('')}
+      </select>
+      <div class="field-hint" id="partAvailHint">Select a part to see available stock</div>`;
+    }
+  } else if(f.type==='number'){
+    const val = isEdit ? (rec[f.key] ?? '') : '';
+    input = `<input type="number" class="mono-field" data-key="${f.key}" value="${esc(val)}" min="${f.min ?? 0}" step="${f.step ?? 1}" ${f.locked && isEdit ? 'disabled' : ''}>`;
+  } else if(f.type==='combo'){
+    const val = isEdit ? (rec[f.key] ?? '') : '';
+    input = `<input list="dl_${f.key}" data-key="${f.key}" value="${esc(val)}" placeholder="${esc(f.placeholder||'')}" autocomplete="off">
+      <datalist id="dl_${f.key}"></datalist>`;
+  } else if(f.type==='date'){
+    const val = isEdit ? (rec[f.key] ?? '') : (f.key==='dateIssued' ? todayStr() : '');
+    input = `<input type="date" class="mono-field" data-key="${f.key}" value="${esc(val)}">`;
+  } else if(f.type==='select'){
+    const val = isEdit ? (rec[f.key] || f.options[0]) : f.options[0];
+    input = `<select data-key="${f.key}">${f.options.map(o=>`<option value="${esc(o)}" ${val===o?'selected':''}>${esc(o)}</option>`).join('')}</select>`;
+  } else {
+    const val = isEdit ? (rec[f.key] ?? '') : '';
+    input = `<input type="text" data-key="${f.key}" value="${esc(val)}" placeholder="${esc(f.placeholder||'')}">`;
+  }
+  return `<div class="field${f.full?' full':''}"><label>${f.label} ${req}</label>${input}</div>`;
+}
+function readTransferForm(isEdit){
+  const body = {};
+  let missing = [];
+  TRANSFER_FIELDS.forEach(f=>{
+    if(f.locked && isEdit) return; // partId/quantity are locked after creation
+    const input = document.querySelector(`[data-key="${f.key}"]`);
+    if(!input) return;
+    let v = input.value.trim();
+    if(f.type==='number') v = v==='' ? 0 : Number(v);
+    body[f.key] = v;
+    if(f.required && (v==='' || v==null)) missing.push(f.label);
+  });
+  return { body, missing };
+}
+async function submitTransferForm(){
+  const isEdit = !!editingTransferId;
+  const { body, missing } = readTransferForm(isEdit);
+  if(missing.length){
+    toast('Please fill in: ' + missing.join(', '), 'bad');
+    return;
+  }
+  const saveBtn = document.getElementById('saveBtn');
+  saveBtn.disabled = true;
+  let ok;
+  if(isEdit){
+    ok = await updateTransfer(editingTransferId, body);
+  } else if(!body.partId){
+    toast('Please select a part', 'bad');
+    saveBtn.disabled = false;
+    return;
+  } else {
+    ok = await createTransfer(body);
+  }
+  saveBtn.disabled = false;
+  if(ok) closeModal();
+}
+
+/* ---------------- Boot ---------------- */
+renderNav();
+setView('dashboard');
+initDb();
+
+})();
+</script>
